@@ -1,0 +1,13 @@
+<repositories encoding="unicode" version="1.1">
+  <repo priority="50" quality="experimental">
+    <name>pacodinev</name>
+    <description />
+    <homepage>https://github.com/pacodinev/gentoo-overlay</homepage>
+    <owner>
+      <email>paco.dinev@gmail.com</email>
+      <name>pacodinev</name>
+    </owner>
+    <source branch="master" type="git">https://github.com/pacodinev/gentoo-overlay.git</source>
+    <source branch="master" type="git">git@github.com:pacodinev/gentoo-overlay.git</source>
+  </repo>
+</repositories>
