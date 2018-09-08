@@ -34,6 +34,7 @@ REQUIRED_USE="
 	xslt? ( xml )"
 
 RDEPEND="
+	dev-libs/protobuf-c
 	dev-libs/expat
 	fcgi? ( dev-libs/fcgi )
 	>=media-libs/gd-2.0.12[truetype,jpeg,png,zlib]
@@ -68,11 +69,12 @@ DEPEND="${RDEPEND}
 
 want_apache2 apache
 
-#PATCHES=(
+PATCHES=(
 #	"${FILESDIR}/${PN}-7.0.0-sec-format.patch"  # see https://github.com/mapserver/mapserver/pull/5248
 #	"${FILESDIR}/${PN}-7.0.0-no-applicable-code.patch"
 #	"${FILESDIR}/${P}-missing-macro.patch"
-#)
+    "${FILESDIR}/${P}-cmake-target.patch"
+)
 
 S=${WORKDIR}/${MY_P}
 
