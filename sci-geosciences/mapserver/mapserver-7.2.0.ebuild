@@ -35,10 +35,10 @@ REQUIRED_USE="
 
 RDEPEND="
 	dev-libs/expat
-	dev-libs/fcgi
+	fcgi? ( dev-libs/fcgi )
 	>=media-libs/gd-2.0.12[truetype,jpeg,png,zlib]
 	media-libs/giflib
-	net-misc/curl
+	curl? ( net-misc/curl )
 	virtual/jpeg:=
 	virtual/libiconv
 	x11-libs/agg
@@ -54,7 +54,7 @@ RDEPEND="
 	)
 	perl? ( dev-lang/perl:= )
 	postgis? ( dev-db/postgis )
-	proj? ( sci-libs/proj net-misc/curl )
+	proj? ( sci-libs/proj )
 	tiff? (
 		media-libs/tiff:=
 		sci-libs/libgeotiff
