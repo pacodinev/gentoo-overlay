@@ -27,7 +27,7 @@ SRC_URI="http://download.osgeo.org/mapserver/${MY_P}.tar.gz"
 LICENSE="MIT"
 KEYWORDS="~amd64 ~x86"
 SLOT="0"
-IUSE="bidi cairo gdal geos mysql opengl perl php postgis proj python threads tiff xml xslt" # ruby php tcl
+IUSE="apache bidi cairo curl gdal geos gif mysql opengl perl php postgis proj python tiff xml xslt fcgi" # ruby php tcl
 
 REQUIRED_USE="
 	php? ( php_targets_php5-6 )
@@ -66,13 +66,13 @@ DEPEND="${RDEPEND}
 	perl? ( >=dev-lang/swig-2.0 )
 	python? ( >=dev-lang/swig-2.0 )"
 
-need_apache2
+want_apache2 apache
 
-PATCHES=(
-	"${FILESDIR}/${PN}-7.0.0-sec-format.patch"  # see https://github.com/mapserver/mapserver/pull/5248
-	"${FILESDIR}/${PN}-7.0.0-no-applicable-code.patch"
-	"${FILESDIR}/${P}-missing-macro.patch"
-)
+#PATCHES=(
+#	"${FILESDIR}/${PN}-7.0.0-sec-format.patch"  # see https://github.com/mapserver/mapserver/pull/5248
+#	"${FILESDIR}/${PN}-7.0.0-no-applicable-code.patch"
+#	"${FILESDIR}/${P}-missing-macro.patch"
+#)
 
 S=${WORKDIR}/${MY_P}
 
@@ -108,12 +108,12 @@ src_configure() {
 		"-DCMAKE_SKIP_RPATH=ON"
 		"-DWITH_ORACLESPATIAL=OFF"
 		"-DWITH_SDE=OFF"
-		"-DWITH_APACHE_MODULE=ON"
+		"-DWITH_APACHE_MODULE=$(usex apache ON OFF)"
 		"-DWITH_ICONV=ON"
 		"-DWITH_GD=ON"
-		"-DWITH_GIF=ON"
-		"-DWITH_CURL=ON"
-		"-DWITH_FCGI=ON"
+		"-DWITH_GIF=$(usex gif ON OFF)"
+		"-DWITH_CURL=$(usex curl ON OFF)"
+		"-DWITH_FCGI=$(usex fcgi ON OFF)"
 		"-DINSTALL_LIB_DIR=${ROOT}usr/$(get_libdir)"
 		"-DWITH_PROJ=$(usex proj ON OFF)"
 		"-DWITH_WMS=$(usex proj ON OFF)"
@@ -132,22 +132,32 @@ src_configure() {
 		"-DWITH_PYTHON=$(usex python ON OFF)"
 		"-DWITH_PERL=$(usex perl ON OFF)"
 	)
-
-	if use gdal && use proj ; then
-		mycmakeargs+=( "-DWITH_WFS=ON"
-				"-DWITH_WCS=ON"
-				"-DWITH_CLIENT_WMS=ON"
-				"-DWITH_CLIENT_WFS=ON"
-				"-DWITH_SOS=$(usex xml ON OFF)"
-			)
-	else
-		mycmakeargs+=( "-DWITH_WFS=OFF"
-			"-DWITH_WCS=OFF"
-			"-DWITH_CLIENT_WMS=OFF"
-			"-DWITH_CLIENT_WFS=OFF"
-			"-DWITH_SOS=OFF"
-		)
-	fi
+	
+	if use proj && use xml ; then
+        mycmakeargs+=( "-DWITH_SOS=ON" )
+    else
+        mycmakeargs+=( "-DWITH_SOS=OFF" )
+    fi
+    
+    if use curl && use gdal ; then
+        mycmakeargs+=( "-DWITH_CLIENT_WMS=ON" 
+            "-DWITH_CLIENT_WFS=ON"
+        )
+    else
+        mycmakeargs+=( "-DWITH_CLIENT_WMS=OFF"
+            "-DWITH_CLIENT_WFS=ON"
+        )
+    fi
+    
+    if use proj && use gdal ; then
+        mycmakeargs+=( "-DWITH_WFS=ON" 
+            "-DWITH_WCS=ON"
+        )
+    else
+        mycmakeargs+=( "-DWITH_WFS=OFF" 
+            "-DWITH_WCS=OFF"
+        )
+    fi
 
 	if use php ; then
 		local slot
