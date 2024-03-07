@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Gentoo Authors
+# Copyright 2020-2024 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -14,14 +14,11 @@ S="${WORKDIR}"
 
 LICENSE="Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 RESTRICT="splitdebug"
 
 RDEPEND="
-	|| (
-		>=app-accessibility/at-spi2-core-2.46.0:2
-		( app-accessibility/at-spi2-atk dev-libs/atk )
-	)
+	>=app-accessibility/at-spi2-core-2.46.0:2
 	app-crypt/libsecret
 	dev-db/sqlcipher
 	dev-libs/expat
@@ -55,7 +52,7 @@ QA_PREBUILT="opt/Element/chrome-sandbox
 	opt/Element/libffmpeg.so
 	opt/Element/libvk_swiftshader.so
 	opt/Element/libvulkan.so.1
-	opt/Element/resources/app.asar.unpacked/node_modules/matrix-seshat/native/index.node
+	opt/Element/resources/app.asar.unpacked/node_modules/matrix-seshat/index.node
 	opt/Element/resources/app.asar.unpacked/node_modules/keytar/build/Release/keytar.node"
 
 src_prepare() {
